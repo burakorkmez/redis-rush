@@ -170,6 +170,7 @@ In a real-world scenario, these basic operations can be used to build a simple c
 This caching system can significantly reduce load on your primary database and improve application response times.
       `,
 	},
+	//TODO add the regxs
 	challenges: [
 		{
 			id: 0,

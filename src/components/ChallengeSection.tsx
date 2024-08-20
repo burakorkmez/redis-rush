@@ -35,6 +35,7 @@ const ChallengeSection = ({ challenge, onNext, onPrevious }: ChallengeSectionPro
 	}, [isChallengeCompleted]);
 
 	const handleSubmit = async (input: string) => {
+		//TODO make it a regx
 		if (input.toLowerCase().trim() === challenge.answer.toLowerCase()) {
 			setFeedback("Correct! Great job!");
 			setIsChallengeCompleted(true);
