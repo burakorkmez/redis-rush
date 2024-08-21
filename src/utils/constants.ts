@@ -93,72 +93,73 @@ export interface Section {
 }
 
 export interface Challenge {
-	id: number;
-	prompt: string;
-	answer: string;
-	type: "command" | "multiple_choice" | "true_false";
+    id: number;
+    prompt: string;
+    answer: string;
+    regx?: RegExp; // check out https://regex101.com/ to try the regx you want
+    type: "command" | "multiple_choice" | "true_false";
 }
 
 export const redisBasicsContent: Section = {
-	slug: "basics",
-	title: "Redis Basics",
-	content: {
-		overview: `
+    slug: "basics",
+    title: "Redis Basics",
+    content: {
+        overview: `
 Redis is a key-value store, and its fundamental operations revolve around setting and retrieving values. These basic operations form the foundation for more complex data manipulations and are essential for understanding how Redis works.
       `,
-		keyCommands: [
-			{
-				name: "SET key value",
-				description: "Sets the value for a key",
-				example: 'SET mykey "Hello Redis"',
-			},
-			{
-				name: "GET key",
-				description: "Retrieves the value of a key",
-				example: "GET mykey",
-			},
-			{
-				name: "EXISTS key",
-				description: "Checks if a key exists",
-				example: "EXISTS mykey",
-			},
-			{
-				name: "DEL key",
-				description: "Deletes a key",
-				example: "DEL mykey",
-			},
-			{
-				name: "MSET key1 value1 [key2 value2 ...]",
-				description: "Sets multiple key-value pairs",
-				example: 'MSET key1 "value1" key2 "value2"',
-			},
-			{
-				name: "MGET key1 [key2 ...]",
-				description: "Gets the values of multiple keys",
-				example: "MGET key1 key2",
-			},
-			{
-				name: "INCR key",
-				description: "Increments the integer value of a key",
-				example: "INCR counter",
-			},
-			{
-				name: "DECR key",
-				description: "Decrements the integer value of a key",
-				example: "DECR counter",
-			},
-			{
-				name: "EXPIRE key seconds",
-				description: "Sets a key's time to live in seconds",
-				example: "EXPIRE mykey 60",
-			},
-			{
-				name: "TTL key",
-				description: "Returns the remaining time to live of a key",
-				example: "TTL mykey",
-			},
-		],
-		useCase: `
+        keyCommands: [
+            {
+                name: "SET key value",
+                description: "Sets the value for a key",
+                example: 'SET mykey "Hello Redis"',
+            },
+            {
+                name: "GET key",
+                description: "Retrieves the value of a key",
+                example: "GET mykey",
+            },
+            {
+                name: "EXISTS key",
+                description: "Checks if a key exists",
+                example: "EXISTS mykey",
+            },
+            {
+                name: "DEL key",
+                description: "Deletes a key",
+                example: "DEL mykey",
+            },
+            {
+                name: "MSET key1 value1 [key2 value2 ...]",
+                description: "Sets multiple key-value pairs",
+                example: 'MSET key1 "value1" key2 "value2"',
+            },
+            {
+                name: "MGET key1 [key2 ...]",
+                description: "Gets the values of multiple keys",
+                example: "MGET key1 key2",
+            },
+            {
+                name: "INCR key",
+                description: "Increments the integer value of a key",
+                example: "INCR counter",
+            },
+            {
+                name: "DECR key",
+                description: "Decrements the integer value of a key",
+                example: "DECR counter",
+            },
+            {
+                name: "EXPIRE key seconds",
+                description: "Sets a key's time to live in seconds",
+                example: "EXPIRE mykey 60",
+            },
+            {
+                name: "TTL key",
+                description: "Returns the remaining time to live of a key",
+                example: "TTL mykey",
+            },
+        ],
+        useCase: `
 In a real-world scenario, these basic operations can be used to build a simple caching system:
 
 1. Use SET to store frequently accessed data in Redis.
@@ -169,70 +170,80 @@ In a real-world scenario, these basic operations can be used to build a simple c
 
 This caching system can significantly reduce load on your primary database and improve application response times.
       `,
-	},
-	//TODO add the regxs
-	challenges: [
-		{
-			id: 0,
-			prompt: "Set a key 'mykey' with the value 'Hello Redis'",
-			answer: "SET mykey 'Hello Redis'",
-			type: "command",
-		},
-		{
-			id: 1,
-			prompt: "Retrieve the value of 'mykey'",
-			answer: "GET mykey",
-			type: "command",
-		},
-		{
-			id: 2,
-			prompt: "Check if 'mykey' exists",
-			answer: "EXISTS mykey",
-			type: "command",
-		},
-		{
-			id: 3,
-			prompt: "Delete 'mykey'",
-			answer: "DEL mykey",
-			type: "command",
-		},
-		{
-			id: 4,
-			prompt: "Set keys 'fruit1' to 'apple' and 'fruit2' to 'banana' in one command",
-			answer: "MSET fruit1 apple fruit2 banana",
-			type: "command",
-		},
-		{
-			id: 5,
-			prompt: "Retrieve the values of both 'fruit1' and 'fruit2' in one command",
-			answer: "MGET fruit1 fruit2",
-			type: "command",
-		},
-		{
-			id: 6,
-			prompt: "Increment the value of 'counter' by 1",
-			answer: "INCR counter",
-			type: "command",
-		},
-		{
-			id: 7,
-			prompt: "Decrement the value of 'counter' by 1",
-			answer: "DECR counter",
-			type: "command",
-		},
-		{
-			id: 8,
-			prompt: "Set 'tempkey' to expire in 60 seconds",
-			answer: "EXPIRE tempkey 60",
-			type: "command",
-		},
-		{
-			id: 9,
-			prompt: "Check how many seconds are left until 'tempkey' expires",
-			answer: "TTL tempkey",
-			type: "command",
-		},
-	],
+    },
+    challenges: [
+        {
+            id: 0,
+            prompt: "Set a key 'mykey' with the value 'Hello Redis'",
+            answer: "SET mykey 'Hello Redis'",
+            regx: /^\s*[sS][eE][tT]\s+(['"]?)mykey\1\s+(['"])Hello\sRedis\2\s*$/,
+            type: "command",
+        },
+        {
+            id: 1,
+            prompt: "Retrieve the value of 'mykey'",
+            answer: "GET mykey",
+            regx: /^\s*[gG][eE][Tt]\s+(['"]?)mykey\1\s*$/,
+            type: "command",
+        },
+        {
+            id: 2,
+            prompt: "Check if 'mykey' exists",
+            answer: "EXISTS mykey",
+            regx: /^\s*[eE][xX][iI][sS][tT][sS]\s+(['"]?)mykey\1\s*$/,
+            type: "command",
+        },
+        {
+            id: 3,
+            prompt: "Delete 'mykey'",
+            answer: "DEL mykey",
+            regx: /^\s*[dD][eE][lL]\s+(['"]?)mykey\1/,
+            type: "command",
+        },
+        {
+            id: 4,
+            prompt: "Set keys 'fruit1' to 'apple' and 'fruit2' to 'banana' in one command",
+            answer: "MSET fruit1 apple fruit2 banana",
+            // it is abit longer cus it allaws for MSET fruit1 apple fruit2 banana and MSET fruit2 banana fruit1 apple
+            regx: /^\s*[mM][sS][eE][tT]\s+((?:(['"]?)fruit1\2\s+(['"]?)apple\3)|(?:(['"]?)fruit2\4\s+(['"]?)banana\5))\s+(?!\1)((?:(['"]?)fruit1\7\s+(['"]?)apple\8)|(?:(['"]?)fruit2\9\s+(['"]?)banana\10))\s*$/,
+            type: "command",
+        },
+        {
+            id: 5,
+            prompt: "Retrieve the values of both 'fruit1' and 'fruit2' in one command",
+            answer: "MGET fruit1 fruit2",
+            regx: /\s*[Mm][gG][eE][Tt]\s+(fruit1|fruit2)\s+(?!\1)(?:fruit2|fruit1)\s*$/,
+            type: "command",
+        },
+        {
+            id: 6,
+            prompt: "Increment the value of 'counter' by 1",
+            answer: "INCR counter",
+			regx: /^\s*[iI][nN][cC][rR]\s+(['"]?)counter\1\s*$/,
+            type: "command",
+        },
+        {
+            id: 7,
+            prompt: "Decrement the value of 'counter' by 1",
+            answer: "DECR counter",
+			regx: /^\s*[dD][eE][Cc][rR]\s+(['"]?)counter\1\s*$/,
+            type: "command",
+        },
+        {
+            id: 8,
+            prompt: "Set 'tempkey' to expire in 60 seconds",
+            answer: "EXPIRE tempkey 60",
+			regx: /^\s*[eE][xX][pP][iI][rR][eE]\s+(['"]?)tempkey\1\s+(['"]?)60\2\s*$/,
+            type: "command",
+        },
+        {
+            id: 9,
+            prompt: "Check how many seconds are left until 'tempkey' expires",
+            answer: "TTL tempkey",
+			regx:/^\s*[tT][Tt][lL]\s+(['"]?)tempkey\1\s*$/,
+            type: "command",
+        },
+    ],
 };
 
 export const dataStructuresContent: Section[] = [
@@ -299,6 +310,7 @@ Imagine you're building a social media application. You can use Redis Lists to m
 This approach ensures fast insertion of new posts and quick retrieval of the most recent content, which is crucial for a responsive social media platform.
       `,
 		},
+    	//TODO add the regxs
 		challenges: [
 			{
 				id: 1,

@@ -3,13 +3,9 @@ import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Terminal, CheckCircle2, AlertCircle, Eye, EyeOff } from "lucide-react";
 import RedisCLI from "./RedisCli";
-
+import type { Challenge } from "@/utils/constants";
 type ChallengeSectionProps = {
-	challenge: {
-		id: number;
-		prompt: string;
-		answer: string;
-	};
+	challenge: Challenge;
 	onNext: () => void;
 	onPrevious: () => void;
 };
@@ -36,14 +32,20 @@ const ChallengeSection = ({ challenge, onNext, onPrevious }: ChallengeSectionPro
 
 	const handleSubmit = async (input: string) => {
 		//TODO make it a regx
-		if (input.toLowerCase().trim() === challenge.answer.toLowerCase()) {
+
+		if ( (challenge.regx && challenge.regx.test(input)) || input.toLowerCase().trim() === challenge.answer.toLowerCase()) {
+			RightAnswer();
+			return
+		}
+			setFeedback("Not quite. Try again!");
+			setIsChallengeCompleted(false);
+		
+
+		function RightAnswer() {
 			setFeedback("Correct! Great job!");
 			setIsChallengeCompleted(true);
 			setShowSolution(false);
 			onNext();
-		} else {
-			setFeedback("Not quite. Try again!");
-			setIsChallengeCompleted(false);
 		}
 	};
 
