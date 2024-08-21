@@ -96,7 +96,9 @@ export interface Challenge {
     id: number;
     prompt: string;
     answer: string;
-    regx?: RegExp; // check out https://regex101.com/ to try the regx you want
+	// check out https://regex101.com/ to try the regx you want;
+	// I am not supporting putting a keyword in a "" or '' like "get" or 'set' they need to be get or set ¯\_(ツ)_/¯;
+    regx?: RegExp;
     type: "command" | "multiple_choice" | "true_false";
 }
 
@@ -316,36 +318,42 @@ This approach ensures fast insertion of new posts and quick retrieval of the mos
 				id: 1,
 				prompt: "Create a list 'fruits' and add 'apple' and 'banana' to it",
 				answer: "LPUSH fruits apple banana",
+				regx: /^\s*[lL][pP][uU][sS][hH]\s+(['"]?)fruits\1\s+(["']?)apple\2\s+(['"]?)banana\3\s*$/,
 				type: "command",
 			},
 			{
 				id: 2,
 				prompt: "Retrieve all elements from the 'fruits' list",
 				answer: "LRANGE fruits 0 -1",
+				regx: /^\s*[lL][rR][aA][nN][Gg][eE]\s+(['"]?)fruits\1\s+(['"]?)0\2\s+(['"]?)-1\3\s*$/,
 				type: "command",
 			},
 			{
 				id: 3,
 				prompt: "Add 'orange' to the right side of the 'fruits' list",
 				answer: "RPUSH fruits orange",
+				regx:/^\s*[rR][pP][uU][sS][hH]\s+(['"]?)fruits\1\s+(['"]?)orange\2\s*$/,
 				type: "command",
 			},
 			{
 				id: 4,
 				prompt: "Remove and return the leftmost element from 'fruits'",
 				answer: "LPOP fruits",
+				regx: /^\s*[lL][pP][oO][pP]\s+(['"]?)fruits\1\s*$/,
 				type: "command",
 			},
 			{
 				id: 5,
 				prompt: "Get the current length of the 'fruits' list",
 				answer: "LLEN fruits",
+				regx:/^\s*[lL][lL][eE][nN]\s+(['"]?)fruits\1\s*$/,
 				type: "command",
 			},
 			{
 				id: 6,
 				prompt: "Insert 'grape' before 'orange' in the 'fruits' list",
 				answer: "LINSERT fruits BEFORE orange grape",
+				regx: /^\s*[lL][iI][nN][sS][Ee][rR][Tt]\s+(['"]?)fruits\1\s+[bB][eE][fF][oO][rR][Ee]\s+(['"]?)orange\2\s+(['"]?)grape\3\s*$/,
 				type: "command",
 			},
 		],
