@@ -54,9 +54,11 @@ const ChallengeSection = ({ challenge, onNext, onPrevious }: ChallengeSectionPro
 				<CardTitle className='text-2xl font-bold text-gray-100'>Challenge</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<p className='text-gray-300 mb-4'>
+				<p className='text-gray-300 mb-4 flex'>
 					<Terminal className='w-6 h-6 inline-block mr-2 text-green-400' />
-					{challenge.prompt}
+					<span>
+						{challenge.prompt}
+					</span>
 				</p>
 				<RedisCLI onSubmit={handleSubmit} />
 				{feedback && (

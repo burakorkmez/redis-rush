@@ -460,10 +460,10 @@ This approach allows for quick comparisons between user preferences and efficien
 			},
 			{
 				id: 6,
-				prompt: "Create a new set 'primary_colors' with 'red', 'blue', and 'yellow', then find the intersection with 'colors'",
-				answer: "SADD primary_colors red blue yellow\nSINTER colors primary_colors",
-				// this one took along time to make (^人^)
-				regx: /^\s*[sS][aA][Dd][Dd]\s+(['"]?)primary_colors\1\s+(?!.*red.*red)(?!.*yellow.*yellow)(?!.*blue.*blue)(?:(['"]?)red\2|(['"]?)yellow\3|(['"]?)blue\4)\s+(?:(['"]?)red\5|(['"]?)yellow\6|(['"]?)blue\7)\s+(?:(['"]?)red\8|(['"]?)yellow\9|(['"]?)blue\10)\s*\n^\s*[sS][iI][nN][tT][eE][rR]\s+(['"]?)colors\11\s+(['"]?)primary_colors\12\s*$/m,
+				prompt: "Create a new set 'primary_colors' with 'red', 'blue', and 'yellow', then find the intersection with 'colors' ( separate them by a semicolon ) ",
+				answer: "SADD primary_colors red blue yellow; SINTER colors primary_colors",
+				// this one took along time to make (^人^) it had a bug in it (ಥ _ ಥ)
+				regx: /^\s*[sS][aA][Dd][Dd]\s+(['"]?)primary_colors\1\s+(?!.*red.*red)(?!.*yellow.*yellow)(?!.*blue.*blue)(?:(['"]?)red\2|(['"]?)yellow\3|(['"]?)blue\4)\s+(?:(['"]?)red\5|(['"]?)yellow\6|(['"]?)blue\7)\s+(?:(['"]?)red\8|(['"]?)yellow\9|(['"]?)blue\10)\s*;\s*[sS][iI][nN][tT][eE][rR]\s+(['"]?)colors\11\s+(['"]?)primary_colors\12\s*$/m,
 				type: "command",
 			},
 		],
