@@ -3,13 +3,9 @@ import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Terminal, CheckCircle2, AlertCircle, Eye, EyeOff } from "lucide-react";
 import RedisCLI from "./RedisCli";
-
+import type { Challenge } from "@/utils/constants";
 type ChallengeSectionProps = {
-	challenge: {
-		id: number;
-		prompt: string;
-		answer: string;
-	};
+	challenge: Challenge;
 	onNext: () => void;
 	onPrevious: () => void;
 };
@@ -35,14 +31,20 @@ const ChallengeSection = ({ challenge, onNext, onPrevious }: ChallengeSectionPro
 	}, [isChallengeCompleted]);
 
 	const handleSubmit = async (input: string) => {
-		if (input.toLowerCase().trim() === challenge.answer.toLowerCase()) {
+			//input.toLowerCase().trim() === challenge.answer.toLowerCase() removed from the next line to use the regx insted 
+		if (challenge.regx.test(input)) {
+			RightAnswer();
+			return
+		}
+			setFeedback("Not quite. Try again!");
+			setIsChallengeCompleted(false);
+		
+
+		function RightAnswer() {
 			setFeedback("Correct! Great job!");
 			setIsChallengeCompleted(true);
 			setShowSolution(false);
 			onNext();
-		} else {
-			setFeedback("Not quite. Try again!");
-			setIsChallengeCompleted(false);
 		}
 	};
 
@@ -52,9 +54,11 @@ const ChallengeSection = ({ challenge, onNext, onPrevious }: ChallengeSectionPro
 				<CardTitle className='text-2xl font-bold text-gray-100'>Challenge</CardTitle>
 			</CardHeader>
 			<CardContent>
-				<p className='text-gray-300 mb-4'>
+				<p className='text-gray-300 mb-4 flex'>
 					<Terminal className='w-6 h-6 inline-block mr-2 text-green-400' />
-					{challenge.prompt}
+					<span>
+						{challenge.prompt}
+					</span>
 				</p>
 				<RedisCLI onSubmit={handleSubmit} />
 				{feedback && (
