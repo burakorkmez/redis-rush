@@ -31,9 +31,8 @@ const ChallengeSection = ({ challenge, onNext, onPrevious }: ChallengeSectionPro
 	}, [isChallengeCompleted]);
 
 	const handleSubmit = async (input: string) => {
-		//TODO make it a regx
-
-		if ( (challenge.regx && challenge.regx.test(input)) || input.toLowerCase().trim() === challenge.answer.toLowerCase()) {
+			//input.toLowerCase().trim() === challenge.answer.toLowerCase() removed from the next line to use the regx insted 
+		if (challenge.regx.test(input)) {
 			RightAnswer();
 			return
 		}
