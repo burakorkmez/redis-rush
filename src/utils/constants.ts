@@ -98,7 +98,7 @@ export interface Challenge {
     answer: string;
 	// check out https://regex101.com/ to try the regx you want;
 	// I am not supporting putting a keyword in a "" or '' like "get" or 'set' they need to be get or set ¯\_(ツ)_/¯;
-    regx?: RegExp;
+    regx: RegExp;
     type: "command" | "multiple_choice" | "true_false";
 }
 
@@ -538,36 +538,42 @@ This structure allows for efficient storage and retrieval of product data, easy 
 				id: 1,
 				prompt: "Create a hash 'user:1' with fields 'name' (John Doe) and 'email' (john@example.com)",
 				answer: 'HSET user:1 name "John Doe" email john@example.com',
+				regx: /^\s*(?!.*name.*name)(?!.*email.*email)[hH][Ss][eE][tT]\s+(['"]?)user:1\1\s+(?:(['"]?)name\2\s+(['"])John Doe\3|(['"]?)email\4\s+(['"]?)john@example\.com\5)\s+(?:(['"]?)name\6\s+(['"])John Doe\7|(['"]?)email\8\s+(['"]?)john@example\.com\9)\s*$/,
 				type: "command",
 			},
 			{
 				id: 2,
 				prompt: "Get the 'name' of 'user:1'",
 				answer: "HGET user:1 name",
+				regx: /^\s*[hH][gG][eE][tT]\s+(['"]?)user:1\1\s+(['"]?)name\2\s*$/,
 				type: "command",
 			},
 			{
 				id: 3,
 				prompt: "Add an 'age' field with value '30' to 'user:1'",
 				answer: "HSET user:1 age 30",
+				regx: /^\s*[hH][sS][eE][tT]\s+(['"]?)user:1\1\s+(['"]?)age\2\s+(['"]?)30\3\s*$/,
 				type: "command",
 			},
 			{
 				id: 4,
 				prompt: "Retrieve all fields and values of 'user:1'",
 				answer: "HGETALL user:1",
+				regx: /^\s*[hH][gG][eE][tT][aA][lL][Ll]\s+(['"]?)user:1\1\s*$/,
 				type: "command",
 			},
 			{
 				id: 5,
 				prompt: "Check if 'user:1' has a 'phone' field",
 				answer: "HEXISTS user:1 phone",
+				regx:/^\s*[hH][eE][xX][iI][sS][tT][sS]\s+(['"]?)user:1\1\s+(["']?)phone\2\s*$/,
 				type: "command",
 			},
 			{
 				id: 6,
 				prompt: "Increment the 'age' of 'user:1' by 1",
 				answer: "HINCRBY user:1 age 1",
+				regx:/^\s*[hH][iI][nN][cC][rR][bB][yY]\s+(['"]?)user:1\1\s+(['"]?)age\2\s+(['"]?)1\3\s*$/,
 				type: "command",
 			},
 		],
@@ -638,42 +644,48 @@ Consider a real-time analytics system for a popular website:
 This structure allows for efficient storage and retrieval of time-series data, easy querying of recent events, and automatic ordering by timestamp, which is crucial for real-time analytics and reporting.
       `,
 		},
-    	//TODO add the regxs
 		challenges: [
 			{
 				id: 1,
 				prompt: "Create a sorted set 'leaderboard' with members: Alice (score: 100), Bob (score: 85), Charlie (score: 95)",
 				answer: "ZADD leaderboard 100 Alice 85 Bob 95 Charlie",
+				// it is long for the same reason 
+				regx: /^\s*[zZ][aA][dD][dD]\s+(['"]?)leaderboard\1\s+(?!.*Alice.*Alice)(?!.*Charlie.*Charlie)(?!.*Bob.*Bob)(?:(['"]?)100\2\s+(['"]?)Alice\3|(['"]?)95\4\s+(['"]?)Charlie\5|(['"]?)85\6\s+(['"]?)Bob\7)\s+(?:(['"]?)100\8\s+(['"]?)Alice\9|(['"]?)95\10\s+(['"]?)Charlie\11|(['"]?)85\12\s+(['"]?)Bob\13)\s+(?:(['"]?)100\14\s+(['"]?)Alice\15|(['"]?)95\16\s+(['"]?)Charlie\17|(['"]?)85\18\s+(['"]?)Bob\19)\s*$/,
 				type: "command",
 			},
 			{
 				id: 2,
 				prompt: "Get the top 2 players from the 'leaderboard'",
 				answer: "ZREVRANGE leaderboard 0 1",
+				regx: /^\s*[zZ][rR][eE][vV][rR][aA][nN][gG][eE]\s+(['"]?)leaderboard\1\s+(['"]?)0\2\s+(['"]?)1\3\s*$/,
 				type: "command",
 			},
 			{
 				id: 3,
 				prompt: "Get Bob's rank in the 'leaderboard' (0-based, high to low score)",
 				answer: "ZREVRANK leaderboard Bob",
+				regx: /^\s*[zZ][rR][eE][vV][rR][aA][nN][kK]\s+(['"]?)leaderboard\1\s+(['"]?)Bob\2\s*$/,
 				type: "command",
 			},
 			{
 				id: 4,
 				prompt: "Get Charlie's score",
 				answer: "ZSCORE leaderboard Charlie",
+				regx: /^\s*[zZ][sS][cC][oO][rR][eE]\s+(['"]?)leaderboard\1\s+(['"]?)Charlie\2\s*$/,
 				type: "command",
 			},
 			{
 				id: 5,
 				prompt: "Increase Alice's score by 15 points",
 				answer: "ZINCRBY leaderboard 15 Alice",
+				regx: /^\s*[zZ][iI][nN][cC][rR][bB][yY]\s+(['"]?)leaderboard\1\s+(['"]?)15\2\s+(["']?)Alice\3\s*$/,
 				type: "command",
 			},
 			{
 				id: 6,
 				prompt: "Get all scores and members, ordered from lowest to highest score",
 				answer: "ZRANGE leaderboard 0 -1 WITHSCORES",
+				regx: /^\s*[zZ][rR][aA][nN][gG][eE]\s+(['"]?)leaderboard\1\s+(['"]?)0\2\s+(['"]?)-1\3\s+[wW][iI][tT][hH][sS][cC][oO][rR][eE][sS]\s*$/,
 				type: "command",
 			},
 		],
