@@ -207,14 +207,14 @@ This caching system can significantly reduce load on your primary database and i
             prompt: "Set keys 'fruit1' to 'apple' and 'fruit2' to 'banana' in one command",
             answer: "MSET fruit1 apple fruit2 banana",
             // it is abit longer cus it allaws for MSET fruit1 apple fruit2 banana and MSET fruit2 banana fruit1 apple
-            regx: /^\s*[mM][sS][eE][tT]\s+((?:(['"]?)fruit1\2\s+(['"]?)apple\3)|(?:(['"]?)fruit2\4\s+(['"]?)banana\5))\s+(?!\1)((?:(['"]?)fruit1\7\s+(['"]?)apple\8)|(?:(['"]?)fruit2\9\s+(['"]?)banana\10))\s*$/,
+            regx: /^\s*(?!.*fruit2.*fruit2)(?!.*fruit1.*fruit1)[mM][sS][eE][tT]\s+((?:(['"]?)(fruit1)\2\s+(['"]?)(apple)\4)|(?:(['"]?)(fruit2)\6\s+(['"]?)(banana)\8))\s+((?:(['"]?)fruit1\11\s+(['"]?)apple\12)|(?:(['"]?)fruit2\13\s+(['"]?)banana\14))\s*$/,
             type: "command",
         },
         {
             id: 5,
             prompt: "Retrieve the values of both 'fruit1' and 'fruit2' in one command",
             answer: "MGET fruit1 fruit2",
-            regx: /\s*[Mm][gG][eE][Tt]\s+(fruit1|fruit2)\s+(?!\1)(?:fruit2|fruit1)\s*$/,
+            regx: /^\s*(?!.*fruit2.*fruit2)(?!.*fruit1.*fruit1)[Mm][gG][eE][Tt]\s+(?:(['"]?)fruit1\1|(['"]?)fruit2\2)\s+(?:(['"]?)fruit2\3|(['"]?)fruit1\4)\s*$/,
             type: "command",
         },
         {
@@ -312,7 +312,6 @@ Imagine you're building a social media application. You can use Redis Lists to m
 This approach ensures fast insertion of new posts and quick retrieval of the most recent content, which is crucial for a responsive social media platform.
       `,
 		},
-    	//TODO add the regxs
 		challenges: [
 			{
 				id: 1,
@@ -427,36 +426,44 @@ This approach allows for quick comparisons between user preferences and efficien
 				id: 1,
 				prompt: "Create a set 'colors' with 'red', 'blue', and 'green'",
 				answer: "SADD colors red blue green",
+				// it is that long cus it support onother oreder of ther answer cus the set doesn't save the order 
+				regx: /^\s*[sS][aA][Dd][Dd]\s+(['"]?)colors\1\s+(?!.*red.*red)(?!.*green.*green)(?!.*blue.*blue)(?:(['"]?)red\2|(['"]?)blue\3|(['"]?)green\4)\s+(?:(['"]?)red\5|(['"]?)blue\6|(['"]?)green\7)\s+(?:(['"]?)red\8|(['"]?)blue\9|(['"]?)green\10)\s*$/,
 				type: "command",
 			},
 			{
 				id: 2,
 				prompt: "Check if 'yellow' is in the 'colors' set",
 				answer: "SISMEMBER colors yellow",
+				regx: /^\s*[sS][iI][sS][mM][eE][mM][bB][eE][rR]\s+(['"]?)colors\1\s+(['"]?)yellow\2\s*$/,
 				type: "command",
 			},
 			{
 				id: 3,
 				prompt: "Add 'blue' to 'colors' again (notice it won't add a duplicate)",
 				answer: "SADD colors blue",
+				regx: /^\s*[sS][aA][Dd][dD]\s+(['"]?)colors\1\s+(['"]?)blue\2\s*$/,
 				type: "command",
 			},
 			{
 				id: 4,
 				prompt: "Remove 'green' from the 'colors' set",
 				answer: "SREM colors green",
+				regx:/^\s*[sS][rR][eE][mM]\s+(['"]?)colors\1\s+(["']?)green\2/,
 				type: "command",
 			},
 			{
 				id: 5,
 				prompt: "Get the number of colors in the 'colors' set",
 				answer: "SCARD colors",
+				regx: /^\s*[sS][Cc][Aa][rR][dD]\s+(['"]?)colors\1\s*$/,
 				type: "command",
 			},
 			{
 				id: 6,
 				prompt: "Create a new set 'primary_colors' with 'red', 'blue', and 'yellow', then find the intersection with 'colors'",
 				answer: "SADD primary_colors red blue yellow\nSINTER colors primary_colors",
+				// this one took along time to make (^人^)
+				regx: /^\s*[sS][aA][Dd][Dd]\s+(['"]?)primary_colors\1\s+(?!.*red.*red)(?!.*yellow.*yellow)(?!.*blue.*blue)(?:(['"]?)red\2|(['"]?)yellow\3|(['"]?)blue\4)\s+(?:(['"]?)red\5|(['"]?)yellow\6|(['"]?)blue\7)\s+(?:(['"]?)red\8|(['"]?)yellow\9|(['"]?)blue\10)\s*\n^\s*[sS][iI][nN][tT][eE][rR]\s+(['"]?)colors\11\s+(['"]?)primary_colors\12\s*$/m,
 				type: "command",
 			},
 		],
@@ -631,6 +638,7 @@ Consider a real-time analytics system for a popular website:
 This structure allows for efficient storage and retrieval of time-series data, easy querying of recent events, and automatic ordering by timestamp, which is crucial for real-time analytics and reporting.
       `,
 		},
+    	//TODO add the regxs
 		challenges: [
 			{
 				id: 1,
